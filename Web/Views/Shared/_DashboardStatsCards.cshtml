@@ -1,0 +1,86 @@
+@model Web.Models.DashboardStatisticsViewModel
+
+<!-- Dashboard Statistics Cards -->
+<div class="mb-6">
+    <h3 id="statistics-title" class="text-xl font-semibold text-gray-800 mb-4">Weekly Statistics</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <!-- Total Events Card -->
+        <div class="bg-white p-6 rounded-lg shadow-md flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+                <h4 class="text-lg font-semibold text-gray-700">Total Events</h4>
+                <span class="text-blue-500 text-xl">📅</span>
+            </div>
+            <div class="flex-grow">
+                <div id="total-events-loading" class="animate-pulse h-8 bg-gray-200 rounded w-16 mb-2 hidden"></div>
+                <p id="total-events-value" class="text-3xl font-bold text-gray-800 mb-2">0</p>
+                <p id="total-events-description" class="text-sm text-gray-500">Events in current period</p>
+            </div>
+        </div>
+
+        <!-- Busiest Day (Events) Card -->
+        <div class="bg-white p-6 rounded-lg shadow-md flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+                <h4 class="text-lg font-semibold text-gray-700">Busiest Day (Events)</h4>
+                <span class="text-blue-500 text-xl">📊</span>
+            </div>
+            <div class="flex-grow">
+                <div id="busiest-day-events-loading" class="animate-pulse h-8 bg-gray-200 rounded w-24 mb-2 hidden"></div>
+                <p id="busiest-day-events-value" class="text-3xl font-bold text-gray-800 mb-2">
+                    @if (Model?.DayWithMostEvents != null && Model.DayWithMostEvents.Date != "Unknown")
+                    {
+                        @($"{DateTime.Parse(Model.DayWithMostEvents.Date).ToString("dddd")} ({Model.DayWithMostEvents.EventCount})")
+                    }
+                    else
+                    {
+                        @("-")
+                    }
+                </p>
+                <p class="text-sm text-gray-500">Day with most scheduled events</p>
+            </div>
+        </div>
+
+        <!-- Longest Day Card -->
+        <div class="bg-white p-6 rounded-lg shadow-md flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+                <h4 class="text-lg font-semibold text-gray-700">Longest Day</h4>
+                <span class="text-blue-500 text-xl">⏱️</span>
+            </div>
+            <div class="flex-grow">
+                <div id="longest-day-loading" class="animate-pulse h-8 bg-gray-200 rounded w-24 mb-2 hidden"></div>
+                <p id="longest-day-value" class="text-3xl font-bold text-gray-800 mb-2">
+                    @if (Model?.DayWithMostHours != null && Model.DayWithMostHours.Date != "Unknown")
+                    {
+                        @($"{DateTime.Parse(Model.DayWithMostHours.Date).ToString("dddd")} ({Model.DayWithMostHours.TotalHours:F1}h)")
+                    }
+                    else
+                    {
+                        @("-")
+                    }
+                </p>
+                <p class="text-sm text-gray-500">Day with most hours scheduled</p>
+            </div>
+        </div>
+
+        <!-- Peak Occupancy Card -->
+        <div class="bg-white p-6 rounded-lg shadow-md flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+                <h4 class="text-lg font-semibold text-gray-700">Peak Occupancy</h4>
+                <span class="text-blue-500 text-xl">📈</span>
+            </div>
+            <div class="flex-grow">
+                <div id="peak-occupancy-loading" class="animate-pulse h-8 bg-gray-200 rounded w-24 mb-2 hidden"></div>
+                <p id="peak-occupancy-value" class="text-3xl font-bold text-gray-800 mb-2">
+                    @if (Model?.PeakOccupancy != null && Model.PeakOccupancy.Date != "Unknown")
+                    {
+                        @($"{DateTime.Parse(Model.PeakOccupancy.Date).ToString("dddd")} ({Model.PeakOccupancy.OccupancyPercentage:F2}%)")
+                    }
+                    else
+                    {
+                        @("-")
+                    }
+                </p>
+                <p class="text-sm text-gray-500">Day with highest schedule occupancy</p>
+            </div>
+        </div>
+    </div>
+</div> 

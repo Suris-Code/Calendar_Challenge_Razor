@@ -1,0 +1,100 @@
+@model Web.Models.DashboardStatisticsViewModel
+@{
+    ViewData["Title"] = "Calendar";
+}
+
+<div class="w-full px-6">
+    <div class="mb-6">
+        <!-- Dashboard Statistics Cards -->
+        @await Html.PartialAsync("_DashboardStatsCards", Model)
+        
+        <span class="text-lg text-gray-500 flex justify-end pb-2 pe-2">Click para crear evento</span>
+    </div>
+    
+    <div class="flex-grow bg-white rounded-lg shadow-md overflow-hidden">
+        <div id="calendar-container" class="h-full">
+            <div id="loading" class="flex justify-center items-center h-96">
+                <div class="text-gray-600">Loading calendar...</div>
+            </div>
+            <div id="error" class="hidden flex justify-center items-center h-96">
+                <div class="text-red-600 p-4 bg-red-50 rounded-lg">
+                    <p class="font-semibold mb-2">Error</p>
+                    <p id="error-message"></p>
+                    <button id="retry-btn" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                        Intentar de nuevo
+                    </button>
+                </div>
+            </div>
+            <div id="calendar" class="hidden h-full"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Event Modal -->
+<div id="event-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 sm:p-6 md:p-8 hidden">
+    <div class="bg-white rounded-lg shadow-xl p-6 max-w-4xl w-full mx-4 relative">
+        <button id="close-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+        <h2 id="modal-title" class="text-2xl font-bold mb-6">Create Event</h2>
+        
+        <form id="event-form">
+            <input type="hidden" id="event-id" />
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div>
+                    <label for="event-title" class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                    <input type="text" id="event-title" name="title" required 
+                           class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                
+                <div>
+                    <label for="event-location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                    <input type="text" id="event-location" name="location" 
+                           class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                
+                <div>
+                    <label for="event-start" class="block text-sm font-medium text-gray-700 mb-1">Start Time</label>
+                    <input type="datetime-local" id="event-start" name="start" required 
+                           class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                
+                <div>
+                    <label for="event-end" class="block text-sm font-medium text-gray-700 mb-1">End Time</label>
+                    <input type="datetime-local" id="event-end" name="end" required 
+                           class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                
+                <div class="md:col-span-2">
+                    <label for="event-description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea id="event-description" name="description" rows="3" required
+                              class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-3">
+                <button type="button" id="delete-event-btn" class="mr-auto px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 hidden">
+                    Delete
+                </button>
+                <button type="button" id="cancel-btn" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400">
+                    Cancel
+                </button>
+                <button type="submit" id="save-btn" class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    Save
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Pass user information from server to JavaScript
+        window.currentUserEmail = '@User.Identity.Name';
+    </script>
+    @* <script src="~/js/calendar.js" asp-append-version="true"></script> *@
+} 

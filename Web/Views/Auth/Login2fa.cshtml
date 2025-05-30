@@ -1,0 +1,57 @@
+@model Web.Models.Login2faViewModel
+@{
+    ViewData["Title"] = "Two-Factor Authentication";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">Two-Factor Authentication</h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-4">
+                    Please enter the authentication code from your authenticator app.
+                </p>
+
+                <form asp-action="Login2fa" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    
+                    <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+                    <input asp-for="Email" type="hidden" />
+                    <input asp-for="Password" type="hidden" />
+                    <input asp-for="RememberMe" type="hidden" />
+                    
+                    <div class="mb-3">
+                        <label asp-for="Code" class="form-label"></label>
+                        <input asp-for="Code" class="form-control text-center" maxlength="6" autocomplete="one-time-code" style="font-size: 1.2em; letter-spacing: 0.2em;" />
+                        <span asp-validation-for="Code" class="text-danger"></span>
+                        <div class="form-text">Enter the 6-digit code from your authenticator app</div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Verify</button>
+                    </div>
+                </form>
+                
+                <hr />
+                
+                <div class="text-center">
+                    <p>
+                        <a asp-action="Login">Back to Login</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Auto-focus on the code input
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('@Html.IdFor(m => m.Code)').focus();
+        });
+    </script>
+} 

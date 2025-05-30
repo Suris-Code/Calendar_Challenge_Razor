@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Suris React/Net Challenge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Web.styles.css" asp-append-version="true" />
+</head>
+<body class="min-h-screen bg-slate-100 flex flex-col">
+    <header class="bg-white shadow-sm py-4 px-8 flex justify-between items-center">
+        <div class="flex items-center gap-6">
+            <h1 class="text-slate-800 text-xl font-bold m-0">Suris React/Net Challenge</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <span class="text-slate-700 text-sm">Welcome, @User.Identity.Name</span>
+                <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline">
+                    <button type="submit" class="bg-red-500 text-white text-sm py-2 px-4 rounded hover:bg-red-600 transition-colors">
+                        Logout
+                    </button>
+                </form>
+            }
+            else
+            {
+                <a asp-controller="Auth" asp-action="Login" class="bg-blue-500 text-white text-sm py-2 px-4 rounded hover:bg-blue-600 transition-colors">
+                    Login
+                </a>
+            }
+        </div>
+    </header>
+    
+    <main class="flex-1 p-8 flex flex-col items-center">
+        @RenderBody()
+    </main>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
